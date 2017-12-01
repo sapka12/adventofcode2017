@@ -1,10 +1,6 @@
 def content(filepath):
 	with open(filepath, 'r') as content_file:
-		return content_file.read()
-
-
-def eq(n0, n1):
-	return int(n0) == int(n1)
+		return open(filepath, 'r').read()
 
 
 def nth_pair(char_list, n0, find_n_plus1_idx):
@@ -24,43 +20,25 @@ def nth_sum_of_pair(chars, n, strategy):
 
 def captcha(input_str, strategy):
 	chars = list(input_str)
-	sums = [ nth_sum_of_pair(chars, idx, strategy) for idx, digit in enumerate(chars)]
+	sums = [ nth_sum_of_pair(chars, idx, strategy) for idx in range(len(chars))]
 	return sum(sums)
 
 
-def run(inputs, strategy):
-	for input_captcha in inputs:
-		print(input_captcha + " : " + str(captcha(input_captcha, strategy)))
+def find_n_plus1_next(size, n):
+	return (int(n) + 1) % size
 
 
-def main():	
-	
-	def find_n_plus1_next(size, n):
-		return (int(n) + 1) % size
+def find_n_plus1_halfway(size, n):
+	return (n + int(size / 2)) % size
 
 
-	def find_n_plus1_halfway(size, n):
-		return (n + int(size / 2)) % size
-	
-	
-	run([
-		"1122", 
-		"1111", 
-		"1234", 
-		"91212129",
-		content('input.txt')
-	], find_n_plus1_next)
-	
-	run([
-		"1212", 
-		"1221", 
-		"123425", 
-		"123123",
-		"12131415",
-		content('input.txt')
-	], find_n_plus1_halfway)
+def captcha_part_one(input_str):
+	return captcha(input_str, find_n_plus1_next)
 
 
-main()
+def captcha_part_two(input_str):
+	return captcha(input_str, find_n_plus1_halfway)
 
 
+print(captcha_part_one(content('input.txt')))
+print(captcha_part_two(content('input.txt')))
