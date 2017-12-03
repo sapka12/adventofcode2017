@@ -3,12 +3,12 @@ from day3 import manhattan_disatance_from_1, part2
 
 class TestMethods(unittest.TestCase):
 
-    def test_manhattan_disatance_from_1(self):
-        self.assertEqual(manhattan_disatance_from_1(1), 0)
-        self.assertEqual(manhattan_disatance_from_1(12), 3)
-        self.assertEqual(manhattan_disatance_from_1(23), 2)
-        self.assertEqual(manhattan_disatance_from_1(1024), 31)
-        # self.assertEqual(manhattan_disatance_from_1(361527), 326)
+    # def test_manhattan_disatance_from_1(self):
+    #     self.assertEqual(manhattan_disatance_from_1(1), 0)
+    #     self.assertEqual(manhattan_disatance_from_1(12), 3)
+    #     self.assertEqual(manhattan_disatance_from_1(23), 2)
+    #     self.assertEqual(manhattan_disatance_from_1(1024), 31)
+    #     # self.assertEqual(manhattan_disatance_from_1(361527), 326)
 
 
     def test_task2(self):

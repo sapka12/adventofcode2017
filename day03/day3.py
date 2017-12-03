@@ -47,6 +47,7 @@ def generate_square_which_contains(x):
 
     return result
 
+
 def manhattan_disatance(pos1, pos2):
     (pos1x, pos1y) = pos1
     (pos2x, pos2y) = pos2
@@ -71,11 +72,50 @@ def manhattan_disatance_from_1(num):
     return get_distance_from_1(arr, num)
 
 
-def part2(num):
-
-    arr = generate_square_which_contains(2)
-    max_val = maximum(arr)
+def in_arr(arr, idx):
+    return idx >= 0 and idx < len(arr)
 
 
+def part2(input):
 
-    return 0
+    counter = 1
+
+    while True:
+
+        counter = counter + 1
+
+        arr = generate_square_which_contains(counter)
+        max_val = maximum(arr)
+
+        zeros = [[0] * len(arr[x]) for x in range(len(arr))]
+
+        for num in [i + 1 for i in range(max_val)]:
+            x, y = pos_of_val(arr, num)
+
+            next_val = 1
+            if num == 1:
+                zeros[x][y] = next_val
+            else:
+                next_val = sum(
+                    [sum(
+                        [
+                            zeros[xx][yy]
+                            for yy in range(y - 1, y + 2)
+                            if in_arr(zeros[xx], yy)
+                        ]
+                    )
+                        for xx in range(x - 1, x + 2)
+                        if in_arr(zeros, xx)
+                    ]
+                )
+                zeros[x][y] = next_val
+
+            print("zeros:")
+            print(next_val)
+            print(zeros)
+
+            if next_val > input:
+                return next_val
+
+
+print(part2(361527))
