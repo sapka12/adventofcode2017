@@ -3,7 +3,6 @@ def maximum(arr):
 
 
 def next_layer(arr):
-    print(maximum(arr))
     orig_size = len(arr)
     size = orig_size + 2
 
@@ -72,4 +71,11 @@ def manhattan_disatance_from_1(num):
     return get_distance_from_1(arr, num)
 
 
-print(manhattan_disatance_from_1(361527))
+def part2(num):
+
+    arr = generate_square_which_contains(2)
+    max_val = maximum(arr)
+
+
+
+    return 0
