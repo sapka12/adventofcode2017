@@ -110,12 +110,9 @@ def part2(input):
                 )
                 zeros[x][y] = next_val
 
-            print("zeros:")
-            print(next_val)
-            print(zeros)
-
             if next_val > input:
                 return next_val
 
 
-print(part2(361527))
+# print(manhattan_disatance_from_1(361527))
+# print(part2(361527))
