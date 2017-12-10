@@ -26,10 +26,6 @@ def task1(elements_size, input_lengths):
     current_pos = 0
     skip_size = 0
     for length in input_lengths:
-        print("length: " + str(length))
-        print("current_pos: " + str(current_pos))
-        print("skip_size: " + str(skip_size))
-        print(elements)
         reversable = take(skip(elements, current_pos), length)
         changable = reverse(reversable)
         elements = change(elements, changable, current_pos)
@@ -37,7 +33,30 @@ def task1(elements_size, input_lengths):
         current_pos = index(elements, current_pos + skip_size + length)
 
         skip_size = skip_size + 1
-        print(elements)
-        print()
 
     return elements[0] * elements[1]
+
+
+
+def to_ascii(text):
+    return [int(ord(n)) for n in text]
+
+
+def to_dense(sparse_hash):
+    from functools import reduce
+    return [reduce((lambda x, y: x ^ y), sparse_hash[(i * 16):((i+1) * 16)]) for i in range(16)]
+
+def task2(input_text):
+
+    one_round_input_lengths = to_ascii(input_text) + [17, 31, 73, 47, 23]
+
+    input_lengths = []
+    for i in range(64):
+        input_lengths = input_lengths + one_round_input_lengths
+
+    sparse_hash = task1(256, input_lengths)
+
+    dense_hash = to_dense(sparse_hash)
+
+    return ""
+
