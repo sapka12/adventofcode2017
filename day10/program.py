@@ -20,11 +20,7 @@ def change(base_arr, change_arr, offset_start):
     return base_arr
 
 
-def task1(elements_size, input_lengths):
-    elements = [i for i in range(elements_size)]
-
-    current_pos = 0
-    skip_size = 0
+def common(elements, input_lengths, current_pos, skip_size):
     for length in input_lengths:
         reversable = take(skip(elements, current_pos), length)
         changable = reverse(reversable)
@@ -34,8 +30,11 @@ def task1(elements_size, input_lengths):
 
         skip_size = skip_size + 1
 
-    return elements[0] * elements[1]
+    return elements[0] * elements[1], current_pos, skip_size, elements
 
+
+def task1(elements_size, input_lengths):
+    return common([i for i in range(elements_size)], input_lengths, 0, 0)[0]
 
 
 def to_ascii(text):
@@ -44,19 +43,20 @@ def to_ascii(text):
 
 def to_dense(sparse_hash):
     from functools import reduce
-    return [reduce((lambda x, y: x ^ y), sparse_hash[(i * 16):((i+1) * 16)]) for i in range(16)]
+    return [reduce((lambda x, y: x ^ y), sparse_hash[(i * 16):((i + 1) * 16)]) for i in range(16)]
+
+
+def to_hexa(i):
+    return "{:02x}".format(i)
+
 
 def task2(input_text):
+    input_lengths = to_ascii(input_text) + [17, 31, 73, 47, 23]
 
-    one_round_input_lengths = to_ascii(input_text) + [17, 31, 73, 47, 23]
-
-    input_lengths = []
+    current_pos = 0
+    skip_size = 0
+    sparse_hash = [i for i in range(256)]
     for i in range(64):
-        input_lengths = input_lengths + one_round_input_lengths
+        bits, current_pos, skip_size, sparse_hash = common(sparse_hash, input_lengths, current_pos, skip_size)
 
-    sparse_hash = task1(256, input_lengths)
-
-    dense_hash = to_dense(sparse_hash)
-
-    return ""
-
+    return "".join([to_hexa(i) for i in to_dense(sparse_hash)])
