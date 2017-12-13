@@ -13,12 +13,12 @@ def get_map(input_file):
 
 class TestMethods(unittest.TestCase):
     def test_task1(self):
-        self.assertEquals(task1(get_map("test.txt")), 24)
-        # self.assertEquals(task1(get_map("input.txt")), 0)
+        self.assertEqual(task1(get_map("test.txt")), 24)
+        self.assertEqual(task1(get_map("input.txt")), 648)
 
-    # def test_task2(self):
-    #     self.assertEquals(task2(get_map("test.txt")), 2)
-    #     self.assertEquals(task2(get_map("input.txt")), 189)
+    def test_task2(self):
+        self.assertEqual(task2(get_map("test.txt")), 10)
+        self.assertEquals(task2(get_map("input.txt")), 3933124)
 
 
 if __name__ == '__main__':
