@@ -16,27 +16,32 @@ def task1(input_txt):
 
 
 def neighbours_with_1(x, y, mx):
+
     ns = [
-        (x + 1, y + 1),
-        (x + 1, y - 1),
-        (x - 1, y + 1),
-        (x - 1, y - 1)
+        (x, y + 1),
+        (x, y - 1),
+        (x - 1, y),
+        (x + 1, y)
     ]
-    return [n for n in ns if 0 <= n[0] < 128 and 0 <= n[1] < 128 and mx[n[0]][n[1]] == 1]
+
+    return [n for n in ns if 0 <= n[0] < len(mx) and 0 <= n[1] < len(mx[n[0]]) and mx[n[0]][n[1]] == 1]
+
+
+def find_neighbours(mx):
+    sum_map = {}
+    for x in range(len(mx)):
+        for y in range(len(mx[x])):
+            if mx[x][y] == 1:
+                neighbours = neighbours_with_1(x, y, mx)
+                sum_map.update({(x, y): neighbours})
+    return sum_map
 
 
 def task2(input_txt):
     mx = square(input_txt)
-    sum_map = {}
-
     print("matrix ready")
 
-    for x in range(128):
-        for y in range(128):
-            if mx[x][y] == 1:
-                neighbours = neighbours_with_1(x, y, mx)
-                sum_map.update({(x, y): neighbours})
-
+    sum_map = find_neighbours(mx)
     print("group map ready")
 
     return count_group(sum_map)
