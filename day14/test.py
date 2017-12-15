@@ -23,7 +23,7 @@ class TestMethods(unittest.TestCase):
         ]), {
             (0, 1): [(1, 1)],
             (1, 0): [(1, 1)],
-            (1, 1): [(1, 1), (0, 1)],
+            (1, 1): [(1, 0), (0, 1)],
         })
 
     def test_hexa_to_binary(self):
