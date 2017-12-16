@@ -1,16 +1,10 @@
-def spin(param, input_str):
-    spin_of_size = -1 * int(param)
-    str_size = len(input_str)
-    return "".join([input_str[(i + spin_of_size) % str_size] for i in range(str_size)])
+def spin(arr, move):
+    spin_of_size = -1 * move
+    str_size = len(arr)
+    return [arr[(i + spin_of_size) % str_size] for i in range(str_size)]
 
 
-def exchange(params, input_str):
-    arr = [input_str[i] for i in range(len(input_str))]
-
-    p = "".join(params).split("/")
-
-    pos_a = int(p[0])
-    pos_b = int(p[1])
+def exchange(arr, pos_a, pos_b):
 
     val_a = arr[pos_a]
     val_b = arr[pos_b]
@@ -18,16 +12,10 @@ def exchange(params, input_str):
     arr[pos_a] = val_b
     arr[pos_b] = val_a
 
-    return "".join(arr)
+    return arr
 
 
-def partner(params, input_str):
-    arr = [input_str[i] for i in range(len(input_str))]
-
-    p = "".join(params).split("/")
-
-    val_a = p[0]
-    val_b = p[1]
+def partner(arr, val_a, val_b):
 
     pos_a = arr.index(val_a)
     pos_b = arr.index(val_b)
@@ -35,29 +23,44 @@ def partner(params, input_str):
     arr[pos_a] = val_b
     arr[pos_b] = val_a
 
-    return "".join(arr)
+    return arr
 
 
-def process(action, input_str):
-    action_case, *params = action
+def to_dance_step(action):
+
+    action_case, params = action[0], action[1:].split("/")
+
+    def fun_spin(arr):
+        return spin(arr, int(params[0]))
+
+    def fun_exchange(arr):
+        return exchange(arr, int(params[0]), int(params[1]))
+
+    def fun_partner(arr):
+        return partner(arr, params[0], params[1])
+
     if action_case == "s":
-        return spin("".join(params), input_str)
+        return fun_spin
     if action_case == "x":
-        return exchange("".join(params), input_str)
+        return fun_exchange
     if action_case == "p":
-        return partner("".join(params), input_str)
+        return fun_partner
 
 
-def task1(actions, input_str):
+def task1(actions, char_arr):
+    functions = [to_dance_step(action) for action in actions]
 
-    while len(actions) != 0:
-        first_action, *other_actions = actions
-        next_input_str = process(first_action, input_str)
-        input_str = next_input_str
-        actions = other_actions
+    while functions:
+        first_fun, other_funs = functions[0], functions[1:]
 
-    return input_str
+        char_arr = first_fun(char_arr)
+        functions = other_funs
+
+    return char_arr
 
 
-def task2():
-    print()
+def task2(actions, arr, dances):
+    for i in range(dances):
+        arr = task1(actions, arr)
+
+    return arr
