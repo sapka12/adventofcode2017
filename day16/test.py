@@ -29,13 +29,16 @@ class TestMethods(unittest.TestCase):
         inp = read_moves("input.txt")
         self.assertEqual(task1(inp, to_arr("abcdefghijklmnop")), to_arr("bijankplfgmeodhc"))
 
+    def test_task2_2rounds(self):
+        self.assertEqual(task2(["s1", "x3/4", "pe/b"], to_arr("abcde"), 2), to_arr("ceadb"))
+
     def test_task2(self):
         inp = read_moves("input.txt")
         self.assertEqual(task2(inp, to_arr("abcdefghijklmnop"), 1), to_arr("bijankplfgmeodhc"))
 
-    # def test_task2_2(self):
-    #     inp = read_moves("input.txt")
-    #     self.assertEqual(task2(inp, "abcdefghijklmnop", 1000000000), "aaaaaaaaaaaaa")
+    def test_task2_2(self):
+        inp = read_moves("input.txt")
+        self.assertEqual(task2(inp, to_arr("abcdefghijklmnop"), 1000000000), "???")
 
 
 if __name__ == '__main__':

@@ -60,7 +60,9 @@ def task1(actions, char_arr):
 
 
 def task2(actions, arr, dances):
-    for i in range(dances):
+    i = 0
+    while i < dances:
+        i = i + 1
         arr = task1(actions, arr)
 
     return arr
