@@ -58,13 +58,29 @@ def task1(actions, char_arr):
 
 def two_dances_permutation(actions, arr):
     after_2_dances = task1(actions, task1(actions, arr))
-    return [after_2_dances.index(arr[i]) for i in range(len(arr))]
+    result = [None] * len(arr)
+    for idx, val in enumerate(arr):
+        result[idx] = arr.index(after_2_dances[idx])
+    return result
+
+
+def two_dances_permutation_without_partner(actions, arr):
+    print("before", len(actions))
+
+    actions = [a for a in actions if a[0] != "p"]
+    print("after", len(actions))
+
+    after_2_dances = task1(actions, task1(actions, arr))
+    result = [None] * len(arr)
+    for idx, val in enumerate(arr):
+        result[idx] = arr.index(after_2_dances[idx])
+    return result
 
 
 def do_permutation(arr, permutation):
     result = [None] * len(arr)
     for idx, val in enumerate(permutation):
-        result[val] = arr[idx]
+        result[idx] = arr[val]
     return result
 
 
@@ -72,9 +88,45 @@ def to_str(arr):
     return "".join(arr)
 
 
-def task2(actions, arr, dances):
+def action_to_permutation(action, array_size):
+    default_perm = [i for i in range(array_size)]
 
-    permutation = two_dances_permutation(actions, arr)
+    if action[0] == "x":
+        idx_0 = int(action[1:].split("/")[0])
+        idx_1 = int(action[1:].split("/")[1])
+        temp = default_perm[idx_0]
+        default_perm[idx_0] = default_perm[idx_1]
+        default_perm[idx_1] = temp
+        return default_perm
+
+    if action[0] == "s":
+        s = int(action[1:])
+        return [default_perm[(i - s) % array_size] for i in range(array_size)]
+
+    return []
+
+
+def sum_permutations(perm1, perm2):
+    print(perm1)
+    print(perm2)
+    return [perm1[perm2[i]] for i in range(len(perm1))]
+
+
+def actions_to_permutation(actions, array_size):
+    actions = [a for a in actions if a[0] != "p"]
+
+    permutation = action_to_permutation(actions[0], array_size)
+    if len(actions) > 1:
+        for i in range(len(actions) - 1):
+            idx = i + 1
+            p = action_to_permutation(actions[idx], array_size)
+            permutation = sum_permutations(permutation, p)
+
+    return permutation
+
+
+def task2(actions, arr, dances):
+    permutation = two_dances_permutation_without_partner(actions, arr)
 
     permutations = dances // 2
     i = 0
@@ -84,10 +136,9 @@ def task2(actions, arr, dances):
         i = i + 1
         next_arr = do_permutation(arr, permutation)
         if next_arr in visited:
-            return visited[permutations % i]
+            return visited[(permutations % i)]
 
         visited.append(next_arr)
-        print(permutations, i, arr, visited)
         arr = next_arr
 
     return arr
