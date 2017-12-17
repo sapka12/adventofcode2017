@@ -5,7 +5,6 @@ def spin(arr, move):
 
 
 def exchange(arr, pos_a, pos_b):
-
     val_a = arr[pos_a]
     val_b = arr[pos_b]
 
@@ -16,7 +15,6 @@ def exchange(arr, pos_a, pos_b):
 
 
 def partner(arr, val_a, val_b):
-
     pos_a = arr.index(val_a)
     pos_b = arr.index(val_b)
 
@@ -27,7 +25,6 @@ def partner(arr, val_a, val_b):
 
 
 def to_dance_step(action):
-
     action_case, params = action[0], action[1:].split("/")
 
     def fun_spin(arr):
@@ -59,10 +56,38 @@ def task1(actions, char_arr):
     return char_arr
 
 
+def two_dances_permutation(actions, arr):
+    after_2_dances = task1(actions, task1(actions, arr))
+    return [after_2_dances.index(arr[i]) for i in range(len(arr))]
+
+
+def do_permutation(arr, permutation):
+    result = [None] * len(arr)
+    for idx, val in enumerate(permutation):
+        result[val] = arr[idx]
+    return result
+
+
+def to_str(arr):
+    return "".join(arr)
+
+
 def task2(actions, arr, dances):
+
+    permutation = two_dances_permutation(actions, arr)
+
+    permutations = dances // 2
     i = 0
-    while i < dances:
+    visited = [arr]
+
+    while i < permutations:
         i = i + 1
-        arr = task1(actions, arr)
+        next_arr = do_permutation(arr, permutation)
+        if next_arr in visited:
+            return visited[permutations % i]
+
+        visited.append(next_arr)
+        print(permutations, i, arr, visited)
+        arr = next_arr
 
     return arr
