@@ -59,7 +59,7 @@ class TestMethods(unittest.TestCase):
 
     def test_task1(self):
         self.assertEqual(task1(test_input), 4)
-        # self.assertEqual(task1(program_input), 0)
+        self.assertEqual(task1(program_input), 1187)
 
 if __name__ == '__main__':
     unittest.main()

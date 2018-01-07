@@ -1,51 +1,29 @@
 from collections import deque
 
-def snd(dict):
-    return lambda x: dict[x]
-
-
-def set(dict):
-    def f(x, y):
-        dict[x] = dict[y]
-    return f
-
-
-def add(dict):
-    def f(x, y):
-        dict[x] = dict[x] + dict[y]
-    return f
-
-
-def mul(dict):
-    def f(x, y):
-        dict[x] = dict[x] * dict[y]
-    return f
-
-
-
 
 def task1(sounds):
     commands = sounds.split("\n")
 
     command_id = 0
-    command = commands[command_id].split(" ")[0]
 
     diction = {}
 
     def val_of(data):
         if 'a' <= data <= 'z':
-            return diction[data]
+            if data in diction.keys():
+                return diction[data]
+            else:
+                return 0
         else:
             return int(data)
 
     played = deque([])
 
-    def get_command(id):
-        return commands[id].split(" ")
+    def get_command(_id):
+        return commands[_id].split(" ")
 
-    while command != "rcv":
+    while True:
         command_desc = get_command(command_id)
-        print(command_desc)
 
         command = command_desc[0]
 
@@ -58,7 +36,6 @@ def task1(sounds):
         if command == "snd":
             x = command_desc[1]
             played.append(diction[x])
-            print("played: ", diction[x])
             command_id = command_id + 1
 
         if command == "add":
@@ -70,7 +47,8 @@ def task1(sounds):
         if command == "mul":
             x = command_desc[1]
             y = val_of(command_desc[2])
-            diction[x] = diction[x] * y
+
+            diction[x] = val_of(x) * y
             command_id = command_id + 1
 
         if command == "mod":
@@ -81,20 +59,16 @@ def task1(sounds):
 
         if command == "rcv":
             x = command_desc[1]
-            val_of_x = diction[x]
+            val_of_x = val_of(x)
             if val_of_x != 0:
                 return played.pop()
             command_id = command_id + 1
 
         if command == "jgz":
-            x = command_desc[1]
+            x = val_of(command_desc[1])
             y = val_of(command_desc[2])
-            val_of_x = diction[x]
-            val_of_y = diction[y]
-            if val_of_x > 0:
-                command_id = command_id + val_of_y
+
+            if x > 0:
+                command_id = command_id + y
             else:
                 command_id = command_id + 1
-
-    return commands
-
