@@ -1,5 +1,5 @@
 import unittest
-from program import task1
+from program import task1, task2
 
 test_input = """set a 1
 add a 2
@@ -56,10 +56,13 @@ jgz a -19"""
 
 
 class TestMethods(unittest.TestCase):
-
     def test_task1(self):
         self.assertEqual(task1(test_input), 4)
         self.assertEqual(task1(program_input), 1187)
+
+    def test_task2(self):
+        self.assertEqual(task2(program_input), 5969)
+
 
 if __name__ == '__main__':
     unittest.main()
