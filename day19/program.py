@@ -16,7 +16,7 @@ def sign_in_pos(line, pos, data):
 
 def next_pos(direction, line, pos, word, data, counter):
     sign = sign_in_pos(line, pos, data)
-    print(direction, line, pos, word, "<", sign, ">")
+    print(direction, line, pos, word, "<", sign, ">", counter)
 
     if 'A' <= sign <= 'Z':
         word = word + sign
@@ -96,4 +96,5 @@ def task1(file_path):
         direction, line, pos, word, sign, counter = next_pos(direction, line, pos, word, data, counter)
 
     return word, counter
+
 

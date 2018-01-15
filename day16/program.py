@@ -1,93 +1,3 @@
-def spin(arr, move):
-    spin_of_size = -1 * move
-    str_size = len(arr)
-    return [arr[(i + spin_of_size) % str_size] for i in range(str_size)]
-
-
-def exchange(arr, pos_a, pos_b):
-    val_a = arr[pos_a]
-    val_b = arr[pos_b]
-
-    arr[pos_a] = val_b
-    arr[pos_b] = val_a
-
-    return arr
-
-
-def partner(arr, val_a, val_b):
-    pos_a = arr.index(val_a)
-    pos_b = arr.index(val_b)
-
-    arr[pos_a] = val_b
-    arr[pos_b] = val_a
-
-    return arr
-
-
-def to_dance_step(action):
-    action_case, params = action[0], action[1:].split("/")
-
-    def fun_spin(arr):
-        return spin(arr, int(params[0]))
-
-    def fun_exchange(arr):
-        return exchange(arr, int(params[0]), int(params[1]))
-
-    def fun_partner(arr):
-        return partner(arr, params[0], params[1])
-
-    if action_case == "s":
-        return fun_spin
-    if action_case == "x":
-        return fun_exchange
-    if action_case == "p":
-        return fun_partner
-
-
-def task1(actions, char_arr):
-    functions = [to_dance_step(action) for action in actions]
-
-    while functions:
-        first_fun, other_funs = functions[0], functions[1:]
-
-        char_arr = first_fun(char_arr)
-        functions = other_funs
-
-    return char_arr
-
-
-def two_dances_permutation(actions, arr):
-    after_2_dances = task1(actions, task1(actions, arr))
-    result = [None] * len(arr)
-    for idx, val in enumerate(arr):
-        result[idx] = arr.index(after_2_dances[idx])
-    return result
-
-
-def two_dances_permutation_without_partner(actions, arr):
-    print("before", len(actions))
-
-    actions = [a for a in actions if a[0] != "p"]
-    print("after", len(actions))
-
-    after_2_dances = task1(actions, task1(actions, arr))
-    result = [None] * len(arr)
-    for idx, val in enumerate(arr):
-        result[idx] = arr.index(after_2_dances[idx])
-    return result
-
-
-def do_permutation(arr, permutation):
-    result = [None] * len(arr)
-    for idx, val in enumerate(permutation):
-        result[idx] = arr[val]
-    return result
-
-
-def to_str(arr):
-    return "".join(arr)
-
-
 def action_to_permutation(action, array_size):
     default_perm = [i for i in range(array_size)]
 
@@ -106,39 +16,75 @@ def action_to_permutation(action, array_size):
     return []
 
 
-def sum_permutations(perm1, perm2):
-    print(perm1)
-    print(perm2)
-    return [perm1[perm2[i]] for i in range(len(perm1))]
+def do_actual_permutation(arr, the_permutation):
+    return [arr[the_permutation[idx]] for idx in range(len(arr))]
 
 
-def actions_to_permutation(actions, array_size):
-    actions = [a for a in actions if a[0] != "p"]
+def perm(actions, input_arr):
+    perm_length = len(input_arr)
 
-    permutation = action_to_permutation(actions[0], array_size)
-    if len(actions) > 1:
-        for i in range(len(actions) - 1):
-            idx = i + 1
-            p = action_to_permutation(actions[idx], array_size)
-            permutation = sum_permutations(permutation, p)
+    def to_perm(action_case, params):
+        arr = list(range(perm_length))
 
-    return permutation
+        if action_case == "s":
+            _rotation = int(params[0])
+            arr = [arr[(x - _rotation) % perm_length] for x in arr]
+        elif action_case == "x":
+            x = int(params[0])
+            y = int(params[1])
+            arr[x], arr[y] = arr[y], arr[x]
+        return arr
+
+    permutations = [to_perm(a[0], a[1:].split("/")) for a in actions]
+
+    p = range(perm_length)
+
+    for _perm in permutations:
+        p = do_actual_permutation(p, _perm)
+
+    return p
 
 
-def task2(actions, arr, dances):
-    permutation = two_dances_permutation_without_partner(actions, arr)
+def task1_arr(actions, dancers):
+    one_round_permutation = perm(actions, dancers)
 
-    permutations = dances // 2
-    i = 0
-    visited = [arr]
+    dancers = do_actual_permutation(dancers, one_round_permutation)
 
-    while i < permutations:
-        i = i + 1
-        next_arr = do_permutation(arr, permutation)
-        if next_arr in visited:
-            return visited[(permutations % i)]
+    for a in actions:
+        if a[0] == "p":
+            params = a[1:].split("/")
 
-        visited.append(next_arr)
-        arr = next_arr
+            x = params[0]
+            y = params[1]
+            x_idx = dancers.index(x)
+            y_idx = dancers.index(y)
 
-    return arr
+            dancers[x_idx] = y
+            dancers[y_idx] = x
+
+    return dancers
+
+
+def task2_arr(actions, dancers, dances):
+    found_dances = []
+
+    for i in range(dances):
+        found_dances.append(dancers)
+        dancers = task1_arr(actions, dancers)
+        if dancers in found_dances:
+            return found_dances[dances % (i+1)]
+
+    return dancers
+
+
+def to_str(arr):
+    return "".join(arr)
+
+
+
+def task1(actions, dancers):
+    return to_str(task1_arr(actions, dancers))
+
+
+def task2(actions, dancers, dances):
+    return to_str(task2_arr(actions, dancers, dances))
