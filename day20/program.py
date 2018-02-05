@@ -39,24 +39,45 @@ def step_for_pva(pva):
 
 def task1(file_path):
     pva_list = pva_lines(file_path)
-    last_closest = [0 for _ in range(len(pva_list))]
-    closest = [manhattan_distance(p) for (p, v, a) in pva_list]
 
-    while closest != last_closest or 0 in closest:
-        last_closest = closest
-        next_pva_list = [step_for_pva(pva) for pva in pva_list]
-        closest = [
-            min(
-                manhattan_distance(pva_list[idx][0]),
-                manhattan_distance(next_pva_list[idx][0])
-            ) for idx in range(len(pva_list))
-        ]
-        pva_list = next_pva_list
+    for _ in range(100000):
+        pva_list = [step_for_pva(pva) for pva in pva_list]
 
-    return min(closest)
+    distances = [manhattan_distance(p) for (p, v, a) in pva_list]
+    return distances.index(min(distances))
 
 
-print(task1("example.txt"))
-print(task1("input.txt"))
+# print(task1("example.txt"))
+# print(task1("input.txt"))
 
 
+def remove_collided(PVAs):
+
+    coordinate_count = {}
+    for pva in PVAs:
+        pos = pva[0]
+        if pos in coordinate_count.keys():
+            coordinate_count[pos] += 1
+        else:
+            coordinate_count[pos] = 1
+
+    return [pva for pva in PVAs if coordinate_count[pva[0]] == 1]
+
+
+def task2(file_path):
+    pva_list = pva_lines(file_path)
+    print(len(pva_list))
+
+    for i in range(1000000):
+
+        if i % 10000 == 0:
+            print(i, len(pva_list), pva_list[0])
+
+        pva_list = [step_for_pva(pva) for pva in pva_list]
+        pva_list = remove_collided(pva_list)
+
+    return len(pva_list)
+
+
+# print(task2("example2.txt"))
+print(task2("input.txt"))
