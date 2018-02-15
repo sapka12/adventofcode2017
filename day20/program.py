@@ -1,3 +1,5 @@
+import itertools
+
 def read(input_file):
     with open(input_file) as f:
         return [x.strip() for x in f.readlines()]
@@ -32,7 +34,7 @@ def step_for_pva(pva):
     a = pva[2]
 
     new_v = sum_coordinates(v, a)
-    new_p = sum_coordinates(p, v)
+    new_p = sum_coordinates(p, new_v)
 
     return new_p, new_v, a
 
@@ -40,44 +42,37 @@ def step_for_pva(pva):
 def task1(file_path):
     pva_list = pva_lines(file_path)
 
-    for _ in range(100000):
+    for _ in range(10000):
         pva_list = [step_for_pva(pva) for pva in pva_list]
 
     distances = [manhattan_distance(p) for (p, v, a) in pva_list]
     return distances.index(min(distances))
 
 
-# print(task1("example.txt"))
-# print(task1("input.txt"))
+print(task1("example.txt"))
+print(task1("input.txt"))
 
 
 def remove_collided(PVAs):
+    out = []
 
-    coordinate_count = {}
-    for pva in PVAs:
-        pos = pva[0]
-        if pos in coordinate_count.keys():
-            coordinate_count[pos] += 1
-        else:
-            coordinate_count[pos] = 1
+    for point, pva_iter in itertools.groupby(PVAs, lambda _pva: _pva[0]):
+        _list = list(pva_iter)
+        if len(_list) == 1:
+            out.append(_list[0])
 
-    return [pva for pva in PVAs if coordinate_count[pva[0]] == 1]
+    return out
 
 
 def task2(file_path):
     pva_list = pva_lines(file_path)
-    print(len(pva_list))
 
-    for i in range(1000000):
-
-        if i % 10000 == 0:
-            print(i, len(pva_list), pva_list[0])
-
+    for i in range(10000):
         pva_list = [step_for_pva(pva) for pva in pva_list]
         pva_list = remove_collided(pva_list)
 
     return len(pva_list)
 
 
-# print(task2("example2.txt"))
+print(task2("example2.txt"))
 print(task2("input.txt"))
